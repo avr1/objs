@@ -17,24 +17,31 @@
  * /
  */
 
-package obj
+package cmd
 
 import (
+	"errors"
+	"github.com/avr1/objs/obj"
 	"github.com/google/uuid"
+	"github.com/spf13/cobra"
 	"os"
-	"path/filepath"
 )
 
-func Get(id uuid.UUID) []byte {
-	pathToRead, err1 := os.UserHomeDir()
-	if err1 != nil {
-		panic("Darn, even your home directory doesn't work.")
-	}
+func init() {
+	rootCmd.AddCommand(removeCommand)
+}
 
-	pathToRead = filepath.Join(pathToRead, ".objs", id.String() + ".obj")
-	file, err2 := os.ReadFile(pathToRead)
-	if err2 != nil {
-		panic("We couldn't read the file name you gave us.")
-	}
-	return file
+var removeCommand = &cobra.Command{
+	Use: "remove",
+	Short: "removes the specified object from the store",
+	RunE: func(cmd *cobra.Command, args []string) error {
+		if len(args) != 1 {
+			return errors.New("invalid number of arguments to remove")
+		}
+		id, err1 := uuid.Parse(os.Args[2])
+		if err1 != nil {
+			return err1
+		}
+		return obj.Remove(id)
+	},
 }
