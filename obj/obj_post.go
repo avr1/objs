@@ -27,34 +27,35 @@ import (
 	"time"
 )
 
-func check(e error) {
-	if e != nil {
-		panic(e)
-	}
-}
-
 // Post posts the given data, as a byte array, to a secure location, while returning a UUID that allows the user to access the data.
-func Post(bytes []byte) uuid.UUID {
+func Post(bytes []byte) (uuid.UUID, error) {
 	id := uuid.New()
-	rootDir, err := os.UserHomeDir()
-	if err != nil {
-		log.Fatal(err)
+	rootDir, err1 := os.UserHomeDir()
+	if err1 != nil {
+		return uuid.Nil, err1
 	}
 
 	os.Mkdir(rootDir+"/.objs", os.ModePerm)
 	rootDir += "/.objs/"
 
 	addToList(id.String())
-	create, err1 := os.Create(rootDir + id.String() + ".obj")
-	check(err1)
+	create, err3 := os.Create(rootDir + id.String() + ".obj")
+	if err3 != nil {
+		return uuid.Nil, err3
+	}
 
 	defer func(create *os.File) {
 		err := create.Close()
-		check(err)
+		if err != nil {
+			panic(err)
+		}
 	}(create)
-	_, err2 := create.Write(bytes)
-	check(err2)
-	return id
+
+	_, err4 := create.Write(bytes)
+	if err4 != nil {
+		return uuid.Nil, err4
+	}
+	return id, nil
 }
 
 func addToList(id string) {

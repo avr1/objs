@@ -32,7 +32,7 @@ func init() {
 }
 
 var getCommand = &cobra.Command{
-	Use: "get",
+	Use:   "get",
 	Short: "Gets the file at the given UUID and stores the data in the given file name",
 	RunE: func(cmd *cobra.Command, args []string) error {
 		if len(os.Args[1:]) != 3 {

@@ -31,7 +31,7 @@ func Get(id uuid.UUID) []byte {
 		panic("Darn, even your home directory doesn't work.")
 	}
 
-	pathToRead = filepath.Join(pathToRead, ".objs", id.String() + ".obj")
+	pathToRead = filepath.Join(pathToRead, ".objs", id.String()+".obj")
 	file, err2 := os.ReadFile(pathToRead)
 	if err2 != nil {
 		panic("We couldn't read the file name you gave us.")

@@ -32,7 +32,7 @@ func init() {
 }
 
 var removeCommand = &cobra.Command{
-	Use: "remove",
+	Use:   "remove",
 	Short: "removes the specified object from the store",
 	RunE: func(cmd *cobra.Command, args []string) error {
 		if len(args) != 1 {

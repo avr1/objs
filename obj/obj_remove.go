@@ -27,6 +27,9 @@ import (
 	"strings"
 )
 
+// Remove the object with the given UUID from the object store, provided that the
+// id exists, and either the user who posted the object or the superuser is
+// trying to remove it.
 func Remove(id uuid.UUID) error {
 	err1 := removeFromList(id.String())
 	if err1 != nil {
@@ -68,7 +71,7 @@ func removeFromList(id string) error {
 			if err3 != nil {
 				return err3
 			}
-			if data[2] != current.Name {
+			if data[2] != "System Administrator" && data[2] != current.Name {
 				return errors.New("you are not the user who created this file, and so you cannot remove it")
 			}
 		}

@@ -30,7 +30,7 @@ func init() {
 }
 
 var listCommand = &cobra.Command{
-	Use: "list",
+	Use:   "list",
 	Short: "Returns the list of all used UUIDs currently stored.",
 	Run: func(cmd *cobra.Command, args []string) {
 		rootDir, err1 := os.UserHomeDir()
