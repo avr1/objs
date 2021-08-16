@@ -25,6 +25,8 @@ import (
 	"testing"
 )
 
+// TestPostAndGetCall tests whether a posted byte stream is stored correctly,
+// accessible by its id, and can be removed concisely.
 func TestPostAndGetCall(t *testing.T) {
 	b := []byte{'g', 'o', 'l', 'a', 'n', 'g'}
 	id, err1 := obj.Post(b)
@@ -49,7 +51,8 @@ func TestPostAndGetCall(t *testing.T) {
 	}
 
 	t.Cleanup(func() {
-		if err := os.Remove(rootDir + "/.objs/" + id.String() + ".obj"); err != nil {
+		err := obj.Remove(id)
+		if err != nil {
 			return
 		}
 	})

@@ -42,7 +42,7 @@ var postCommand = &cobra.Command{
 			if err != nil {
 				return err
 			}
-			n, err := fmt.Println(obj.Post(bytes))
+			n, err := obj.Post(bytes)
 			if err != nil {
 				return err
 			}
