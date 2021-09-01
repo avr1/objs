@@ -20,21 +20,61 @@
 package obj
 
 import (
+	"errors"
 	"github.com/google/uuid"
 	"os"
+	"os/user"
 	"path/filepath"
+	"strings"
 )
 
-func Get(id uuid.UUID) []byte {
+//Get returns the byte array of the file, as stored in the object store.
+//Only returns the data if the person accessing it has permission to get the data.
+func Get(id uuid.UUID) ([]byte, error) {
 	pathToRead, err1 := os.UserHomeDir()
 	if err1 != nil {
-		panic("Darn, even your home directory doesn't work.")
+		return nil, err1
+	}
+
+	if b := getValidFromList(id.String()); b != nil {
+		return nil, b
 	}
 
 	pathToRead = filepath.Join(pathToRead, ".objs", id.String()+".obj")
 	file, err2 := os.ReadFile(pathToRead)
 	if err2 != nil {
-		panic("We couldn't read the file name you gave us.")
+		return nil, errors.New("no object with that UUID could be found")
 	}
-	return file
+
+	return file, nil
+}
+
+func getValidFromList(id string) error {
+	rootDir, err1 := os.UserHomeDir()
+	if err1 != nil {
+		return err1
+	}
+
+	f, err2 := os.ReadFile(rootDir + "/.objs/.list.txt")
+
+	if err2 != nil {
+		return err2
+	}
+
+	lines := strings.Split(string(f), "\n")
+
+	for _, line := range lines {
+		if strings.Contains(line, id) {
+			data := strings.Split(line, "\t")
+			current, err3 := user.Current()
+			if err3 != nil {
+				return err3
+			}
+			if current.Name != "System Administrator" && data[2] != current.Name {
+				return errors.New("cannot get a file you did not create")
+			}
+		}
+	}
+
+	return nil
 }

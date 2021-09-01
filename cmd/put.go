@@ -28,12 +28,12 @@ import (
 )
 
 func init() {
-	rootCmd.AddCommand(getCommand)
+	rootCmd.AddCommand(putCommand)
 }
 
-var getCommand = &cobra.Command{
-	Use:   "get",
-	Short: "Gets the file at the given UUID and stores the data in the given file name",
+var putCommand = &cobra.Command{
+	Use:   "put UUID File",
+	Short: "Puts the contents of the given file in the object with the given UUID",
 	RunE: func(cmd *cobra.Command, args []string) error {
 		if len(os.Args[1:]) != 3 {
 			return errors.New("not enough arguments in get call")
@@ -43,14 +43,14 @@ var getCommand = &cobra.Command{
 				return err1
 			}
 
-			file, err2 := obj.Get(id)
-			if err2 != nil {
-				return errors.New("no object with that UUID exists")
+			bytes, err := os.ReadFile(os.Args[3])
+			if err != nil {
+				return err
 			}
 
-			err3 := os.WriteFile(os.Args[len(os.Args)-1], file, 0666)
-			if err3 != nil {
-				return err3
+			err2 := obj.Put(id, bytes)
+			if err2 != nil {
+				return err2
 			}
 
 			return nil

@@ -49,6 +49,7 @@ func Remove(id uuid.UUID) error {
 	return nil
 }
 
+//removeFromList removes the id passed into it from the list, provided no errors are generated.
 func removeFromList(id string) error {
 	rootDir, err1 := os.UserHomeDir()
 	if err1 != nil {
