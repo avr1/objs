@@ -21,7 +21,8 @@ package obj
 
 import "github.com/google/uuid"
 
-//Put puts the byte
+//Put puts the bytes given in the object with the given id, if such an object
+//exists and is permissible to modify for the current user.
 func Put(id uuid.UUID, bytes []byte) error {
 	_, err1 := Get(id)
 	if err1 != nil {

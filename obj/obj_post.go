@@ -45,7 +45,7 @@ func postWithID(bytes []byte, id uuid.UUID, alreadyListed bool) error {
 		return err1
 	}
 
-	os.Mkdir(rootDir+"/.objs", os.ModePerm)
+	_ = os.Mkdir(rootDir+"/.objs", os.ModePerm)
 	rootDir += "/.objs/"
 
 	if alreadyListed {
